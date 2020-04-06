@@ -1,0 +1,28 @@
+<h1>Show Upload</h1>
+
+<ul>
+
+  <li>
+    <strong>Content type:</strong>
+    <%= @upload.content_type %>
+  </li>
+
+  <li>
+    <strong>Filename:</strong>
+    <%= @upload.filename %>
+  </li>
+
+  <li>
+    <strong>Hash:</strong>
+    <%= @upload.hash %>
+  </li>
+
+  <li>
+    <strong>Size:</strong>
+    <%= @upload.size %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: Routes.upload_path(@conn, :edit, @upload) %></span>
+<span><%= link "Back", to: Routes.upload_path(@conn, :index) %></span>
