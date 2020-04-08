@@ -12,3 +12,5 @@
 for name <- ~w( Apple Facebook Microsoft ) do
   ImageHub.Multimedia.create_category(name)
 end
+
+{:ok, _user} = ImageHub.Accounts.create_user(%{email: "wolfram@imh.com", password: "@#$@WEWE@#SEfsefe"})

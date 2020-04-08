@@ -25,9 +25,9 @@ let Video = {
     })
     let presence = new Presence(videoChannel)
     presence.onSync(() => {
-      userList.innerHTML = presence.list((id, {metas: [first, ...rest]}) => {
+      userList.innerHTML = presence.list((id, {user: user, metas: [first, ...rest]}) => {
         let count = rest.length + 1
-        return `<li>${id}: (${count})</li>`
+        return `<li>${user.username}: (${count})</li>`
       }).join(" ")
     })
 

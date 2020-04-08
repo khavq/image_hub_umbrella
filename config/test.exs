@@ -1,5 +1,9 @@
 use Mix.Config
 
+config :info_sys, :wolfram,
+  app_id: "some_app_id",
+  http_client: InfoSys.Test.HTTPClient
+
 # Configure your database
 config :image_hub, ImageHub.Repo,
   username: "postgres",

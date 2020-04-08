@@ -4,6 +4,14 @@ defmodule ImageHub.Accounts do
   alias ImageHub.Accounts.User
   alias Argon2
 
+  def get_user_by(query) do
+    Repo.get_by(User, query)
+  end
+
+  def list_user_by_ids(ids) do
+    Repo.all(from u in User, where: u.id in ^ids)
+  end
+
   def list_users do
     Repo.all(User)
   end
