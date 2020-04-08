@@ -51,9 +51,9 @@ defmodule ImageHubWeb.Router do
     pipe_through [:browser, :auth, :ensure_auth]
 
     get "/protected", PageController, :protected
-    resources "/users", UserController
+    resources "/users", UserController, only: ~w(new index show edit update delete)a
     resources "/uploads", UploadController
-    resources "/videos", VideoController
+    resources "/videos", VideoController, only: ~w(new show create edit update delete)a
   end
 
   defp put_user_token(conn, _) do

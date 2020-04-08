@@ -32,12 +32,9 @@ defmodule ImageHubWeb.VideoChannel do
   def handle_in("new_annotation", params, user, socket) do
     case ImageHub.Multimedia.annotation_video(user, socket.assigns.video_id, params) do
       {:ok, annotation} ->
-        broadcast!(socket, "new_annotation", %{
-          id: annotation.id,
-          user: ImageHubWeb.UserView.render("user.json", %{user: user}),
-          body: annotation.body,
-          at: annotation.at
-        })
+        broadcast_annotation(user, annotation, socket)
+        Task.start(fn -> compute_additional_info(annotation, socket) end)
+
         {:reply, :ok, socket}
       {:error, changeset} ->
         {:reply, {:error, %{error: changeset}}, socket}
@@ -46,11 +43,26 @@ defmodule ImageHubWeb.VideoChannel do
     {:reply, :ok, socket}
   end
 
-  def handle_info(:ping, socket) do
-    count = socket.assigns[:count] || 1
-    push(socket, "ping", %{count: count})
+  defp broadcast_annotation(user, annotation, socket) do
+    broadcast!(socket, "new_annotation", %{
+      id: annotation.id,
+      user: ImageHubWeb.UserView.render("user.json", %{user: user}),
+      body: annotation.body,
+      at: annotation.at
+    })
+  end
 
-    {:noreply, assign(socket, :count, count + 1)}
+  def compute_additional_info(annotation, socket) do
+    for result <- InfoSys.compute(annotation.body, limit: 1, timeout: 10_000) do
+      backend_user = ImageHub.Accounts.get_user_by(email: "wolfram@imh.com")
+      attrs = %{at: annotation.at, body: result.text }
+
+      case ImageHub.Multimedia.annotation_video(backend_user, annotation.video_id, attrs) do
+        {:ok, backend_annotation} ->
+          broadcast_annotation(backend_user, backend_annotation, socket)
+        _ -> :error
+      end
+    end
   end
 
   defp current_user(id) do

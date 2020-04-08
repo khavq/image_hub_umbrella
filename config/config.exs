@@ -9,6 +9,9 @@
 # move said applications out of the umbrella.
 use Mix.Config
 
+wolfram_app_id = System.get_env("WOLFRAM_APP_ID") || raise "MISSING WOLFRAM APP ID"
+config :info_sys, :wolfram, app_id: wolfram_app_id
+
 config :image_hub,
   documents_upload_directory: System.get_env("DOCUMENTS_UPLOADS_DIRECTORY")
 

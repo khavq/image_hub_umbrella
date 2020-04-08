@@ -10,7 +10,7 @@ defmodule ImageHubWeb.VideoController do
     apply(__MODULE__, action_name(conn), args)
   end
 
-  def index(conn, _params, current_user) do
+  def index(conn, _params, _current_user) do
     videos = Multimedia.list_videos
     render(conn, "index.html", videos: videos)
   end

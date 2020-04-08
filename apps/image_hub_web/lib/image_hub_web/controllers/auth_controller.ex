@@ -32,7 +32,7 @@ defmodule ImageHubWeb.AuthController do
         conn
         |> put_flash(:info, "Successfully authenticated.")
         #|> put_session(:current_user, user)
-        #|> Guardian.Plug.sign_in(user)
+        |> Guardian.Plug.sign_in(user)
         #|> configure_session(renew: true)
         |> redirect(to: "/users")
 

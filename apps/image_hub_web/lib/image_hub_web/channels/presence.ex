@@ -68,6 +68,20 @@ defmodule ImageHubWeb.Presence do
   information, while maintaining the required `:metas` field from the
   original presence data.
   """
+  def fetch(_topic, entries) do
+    users =
+      entries
+      |> Map.keys()
+      |> ImageHub.Accounts.list_user_by_ids()
+      |> Enum.into(%{}, fn user ->
+          {to_string(user.id), %{username: user.email}}
+        end)
+
+    for {key, %{metas: metas}} <- entries, into: %{} do
+      {key, %{metas: metas, user: users[key]}}
+    end
+  end
+
   use Phoenix.Presence, otp_app: :image_hub_web,
                         pubsub_server: ImageHubWeb.PubSub
 end
